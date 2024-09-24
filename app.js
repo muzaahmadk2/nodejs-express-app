@@ -10,7 +10,7 @@ const app = express();
 app.set("view engine", "ejs");
 app.set("views", "views");
 
-const mongoConnect = require("./util/database").mongoConnect;
+const mongoose = require("mongoose");
 const User = require("./models/user");
 
 const adminRoutes = require("./routes/admin");
@@ -28,18 +28,33 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, "public")));
 
 app.use((req, res, next) => {
-  User.findById("66f135b878322cd9127a164b")
+  User.findById("66f2dac9a00b1e42624cd765")
     .then((user) => {
-      req.user = new User(user.name, user.email, user.cart, user._id);
+      req.user = user;
       next();
     })
     .catch((err) => console.log(err));
 });
+
 app.use("/admin", adminRoutes);
 app.use(shopRoutes);
 
 app.use(errorController.get404);
 
-mongoConnect(() => {
-  app.listen(3001);
-});
+mongoose
+  .connect(
+    "mongodb+srv://muzammil176:Muzammil%40176@cluster0.wsqbt.mongodb.net/shop?retryWrites=true&w=majority&appName=Cluster0"
+  )
+  .then((result) => {
+    User.findOne().then((user) => {
+      if (!user) {
+        const newUser = new User({
+          name: "Muz",
+          email: "muz@test.com",
+          cart: { items: [] },
+        });
+        newUser.save();
+      }
+    });
+    app.listen(3001);
+  });
