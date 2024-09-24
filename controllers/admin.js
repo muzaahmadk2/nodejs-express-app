@@ -18,6 +18,7 @@ exports.postAddProduct = (req, res, next) => {
     price: price,
     description: description,
     imageUrl: imageUrl,
+    userId: req.user, ////here the mongoose automaticallly pick the id from the user details don't need to explicitely give req.user._id
   });
   product
     .save()
@@ -72,7 +73,10 @@ exports.postEditProduct = (req, res, next) => {
 
 exports.getProducts = (req, res, next) => {
   Product.find()
+    .select("title price -_id") ////sidenote :- we can filter which all property we need and which dont by this way
+    .populate("userId", "name") //// and also we can populate a certain property this way and also can filter the properties to get the same above way
     .then((products) => {
+      console.log(products);
       res.render("admin/products", {
         prods: products,
         pageTitle: "Admin Products",
