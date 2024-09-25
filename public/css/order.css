@@ -1,0 +1,27 @@
+.order-item-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  margin: auto;
+  width: 90rem;
+  max-width: 90%;
+}
+
+.order-item {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 1rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
+}
+.pdt-item {
+  display: flex;
+  color: green;
+  width: 70rem;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 1rem;
+  border: 1px solid darkgreen;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
+}

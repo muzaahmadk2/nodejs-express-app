@@ -25,6 +25,50 @@ const userSchema = new Schema({
   },
 });
 
+userSchema.methods.addToCart = function (product) {
+  const cartItemIndex = this.cart.items.findIndex((cp) => {
+    return cp.productId.toString() === product._id.toString();
+  });
+  let newQty = 1;
+  const updatedCartItems = [...this.cart.items];
+
+  if (cartItemIndex >= 0) {
+    newQty = this.cart.items[cartItemIndex].quantity + 1;
+    updatedCartItems[cartItemIndex].quantity = newQty;
+  } else {
+    updatedCartItems.push({
+      productId: product._id,
+      quantity: 1,
+    });
+  }
+
+  const updatedCart = {
+    items: updatedCartItems,
+  };
+  this.cart = updatedCart;
+  return this.save();
+};
+
+userSchema.methods.deleteCartItem = function (prodId) {
+  const cartItemIndex = this.cart.items.findIndex((cp) => {
+    return cp.productId.toString() === prodId.toString();
+  });
+
+  const updatedCartItems = [...this.cart.items];
+  if (updatedCartItems[cartItemIndex].quantity > 1) {
+    updatedCartItems[cartItemIndex].quantity -= 1;
+  } else {
+    updatedCartItems.splice(cartItemIndex, 1);
+  }
+  this.cart.items = updatedCartItems;
+  return this.save();
+};
+
+userSchema.methods.clearCart = function () {
+  this.cart = { items: [] };
+  this.save();
+};
+
 module.exports = mongoose.model("User", userSchema);
 // const getDb = require("../util/database").getDb;
 // const mongodb = require("mongodb");

@@ -30,7 +30,7 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use((req, res, next) => {
   User.findById("66f2dac9a00b1e42624cd765")
     .then((user) => {
-      req.user = user;
+      req.user = user; // now we can access the user schema with all its methods
       next();
     })
     .catch((err) => console.log(err));

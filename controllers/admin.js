@@ -73,10 +73,9 @@ exports.postEditProduct = (req, res, next) => {
 
 exports.getProducts = (req, res, next) => {
   Product.find()
-    .select("title price -_id") ////sidenote :- we can filter which all property we need and which dont by this way
-    .populate("userId", "name") //// and also we can populate a certain property this way and also can filter the properties to get the same above way
+    // .select('title price -_id')
+    //   .populate("userId")
     .then((products) => {
-      console.log(products);
       res.render("admin/products", {
         prods: products,
         pageTitle: "Admin Products",
