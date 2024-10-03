@@ -33,6 +33,7 @@ exports.getIndex = (req, res, next) => {
         prods: products,
         pageTitle: "Shop",
         path: "/",
+        isAuthenticated: false,
       });
     })
     .catch((err) => console.log(err));
