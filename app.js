@@ -65,15 +65,5 @@ mongoose
     "mongodb+srv://muzammil176:Muzammil%40176@cluster0.wsqbt.mongodb.net/shop?retryWrites=true&w=majority&appName=Cluster0"
   )
   .then((result) => {
-    User.findOne().then((user) => {
-      if (!user) {
-        const newUser = new User({
-          name: "Muz",
-          email: "muz@test.com",
-          cart: { items: [] },
-        });
-        newUser.save();
-      }
-    });
     app.listen(3001);
   });
