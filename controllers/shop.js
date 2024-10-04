@@ -86,7 +86,7 @@ exports.postOrder = (req, res, next) => {
         return { quantity: i.quantity, product: { ...i.productId._doc } }; //// i.productId just give the objectId, so we spread it but to avoid the metadata we only take the doc by ""._doc"
       });
       const order = new Order({
-        user: { name: req.user.name, userId: req.user },
+        user: { email: req.user.email, userId: req.user },
         products: products,
       });
       return order.save();
