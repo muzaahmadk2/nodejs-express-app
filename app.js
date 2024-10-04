@@ -4,6 +4,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const session = require("express-session");
 const MongoDbSession = require("connect-mongodb-session")(session);
+const csrf = require("csurf");
 
 const errorController = require("./controllers/error");
 
@@ -12,6 +13,8 @@ const store = new MongoDbSession({
   uri: "mongodb+srv://muzammil176:Muzammil%40176@cluster0.wsqbt.mongodb.net/shop?retryWrites=true&w=majority&appName=Cluster0",
   collection: "session",
 });
+
+const csrfProtection = csrf();
 
 app.set("view engine", "ejs");
 app.set("views", "views");
@@ -42,6 +45,8 @@ app.use(
   })
 );
 
+app.use(csrfProtection);
+
 app.use((req, res, next) => {
   if (!req.session.user) {
     return next();
@@ -52,6 +57,12 @@ app.use((req, res, next) => {
       next();
     })
     .catch((err) => console.log(err));
+});
+
+app.use((req, res, next) => {
+  res.locals.isAuthenticated = req.session.isLoggedIn;
+  res.locals.csrfToken = req.csrfToken();
+  next();
 });
 
 app.use("/admin", adminRoutes);
