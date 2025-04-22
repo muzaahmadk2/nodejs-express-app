@@ -22,4 +22,7 @@ router.post("/edit-product", isAuth, adminController.postEditProduct);
 
 router.post("/delete-product", isAuth, adminController.postDeleteProduct);
 
+//testing for finRag
+router.post("/chat", adminController.chatAi);
+
 module.exports = router;
