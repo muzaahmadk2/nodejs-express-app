@@ -2,6 +2,8 @@ const User = require("../models/user");
 const bcrypt = require("bcryptjs");
 const crypto = require("crypto");
 
+const { validationResult } = require("express-validator");
+
 exports.getLogin = (req, res, next) => {
   let message = req.flash("error");
 
@@ -18,9 +20,18 @@ exports.getLogin = (req, res, next) => {
 };
 
 exports.getSignup = (req, res, next) => {
+  let message = req.flash("error");
+
+  if (message.length > 0) {
+    message = message[0];
+  } else {
+    message = null;
+  }
+
   res.render("auth/signup", {
     path: "/signup",
     pageTitle: "Signup",
+    errorMessage: message,
   });
 };
 
@@ -59,26 +70,34 @@ exports.postSignup = (req, res, next) => {
   const email = req.body.email;
   const password = req.body.password;
   const confirmPassword = req.body.confirmPassword;
-
-  User.findOne({ email: email })
-    .then((user) => {
-      if (user) {
-        return res.redirect("/signup");
-      }
-      bcrypt
-        .hash(password, 12)
-        .then((hashedPass) => {
-          const user = new User({
-            email: email,
-            password: hashedPass,
-            cart: { items: [] },
-          });
-          return user.save();
-        })
-        .then((result) => {
-          res.redirect("/login");
-        });
+  const errors = validationResult(req);
+  // console.log(errors);
+  if (!errors.isEmpty()) {
+    return res.status(422).render("auth/signup", {
+      path: "/signup",
+      pageTitle: "Signup",
+      errorMessage: errors.array()[0].msg,
+    });
+  }
+  // User.findOne({ email: email })
+  //   .then((user) => {
+  //     if (user) {
+  //       return res.redirect("/signup");  /// we dont need this as we validate it using express validator in router
+  // }
+  bcrypt
+    .hash(password, 12)
+    .then((hashedPass) => {
+      const user = new User({
+        email: email,
+        password: hashedPass,
+        cart: { items: [] },
+      });
+      return user.save();
     })
+    .then((result) => {
+      res.redirect("/login");
+    })
+
     .catch((err) => console.log(err));
 };
 
