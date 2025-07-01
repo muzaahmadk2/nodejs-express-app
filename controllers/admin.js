@@ -102,23 +102,6 @@ exports.getProducts = (req, res, next) => {
     .catch((err) => console.log(err));
 };
 
-// exports.postDeleteProduct = (req, res, next) => {
-//   const prodId = req.body.productId;
-//   Product.findById(prodId)
-//     .then((product) => {
-//       if (!product) {
-//         return next(new Error("Product not found"));
-//       }
-//       fileHelper.deleteFile(product.imageUrl);
-//     })
-//     .catch((err) => next(err));
-//   Product.findByIdAndDelete(prodId)
-//     .then((result) => {
-//       console.log("Product delketed");
-//       res.redirect("/admin/products");
-//     })
-//     .catch((err) => console.log(err));
-// };
 exports.postDeleteProduct = (req, res, next) => {
   const prodId = req.body.productId;
   Product.findById(prodId)
